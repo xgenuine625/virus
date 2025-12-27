@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>For You</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: #111;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .phone-frame {
+      width: 100%;
+      max-width: 390px;
+      height: 100dvh;
+      box-sizing: border-box;
+
+      border: 6px solid #f6e7a6;
+      border-radius: 24px;
+
+      background-color: #1a1a1a;
+      background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 65s-23-15.6-23-31.2C17 26 22.4 20 30 20c5.2 0 8.4 3 10 6.2C41.6 23 44.8 20 50 20c7.6 0 13 6 13 13.8C63 49.4 40 65 40 65z' fill='%23f6e7a6' fill-opacity='0.25'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-position: center;
+      background-size: 80px 80px;
+
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      padding:
+        calc(24px + env(safe-area-inset-top))
+        calc(24px + env(safe-area-inset-right))
+        calc(24px + env(safe-area-inset-bottom))
+        calc(24px + env(safe-area-inset-left));
+    }
+
+    /* MARQUEE / SCROLLING TEXT */
+    .marquee-container {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #f6e7a6;
+      margin-bottom: 10px;
+    }
+
+    .marquee-text {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      font-weight: bold;
+      color: #111;
+      animation: scrollText 12s linear infinite;
+    }
+
+    @keyframes scrollText {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .love-text {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .animate {
+      animation: popFade 0.5s ease forwards;
+    }
+
+    @keyframes popFade {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    button {
+      background: #f6e7a6;
+      color: #111;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background: #fff1b8;
+    }
+
+    /* CAROUSEL STYLING */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      height: 200px; /* height for pages; adjust as needed */
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    .carousel-page {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 16px;
+      transition: transform 0.5s ease, left 0s;
+
+      /* PAPER TEXTURE */
+      background-color: #fdf6e3;
+      background-image:
+        radial-gradient(circle, rgba(0,0,0,0.02) 1px, transparent 1px),
+        radial-gradient(circle, rgba(0,0,0,0.02) 1px, transparent 1px);
+      background-position: 0 0, 25px 25px;
+      background-size: 50px 50px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+
+    .carousel-page.active {
+      transform: translateX(0);
+      left: 0;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone-frame">
+    <!-- MARQUEE SCROLLING TEXT -->
+    <div class="marquee-container">
+      <div class="marquee-text">If you're reading this, this means you are very gorgeous muahahahah 💣💣💣</div>
+    </div>
+
+    <!-- LOVE TEXT + BUTTON -->
+    <div class="love-text" id="loveText">I love you more, Simone ❤️</div>
+    <button id="changeButton">I love you, Tam (click me)</button>
+
+    <!-- SWIPEABLE CAROUSEL -->
+    <div class="carousel-container" id="carousel">
+      <div class="carousel-page active" id="page1">Page 1 content</div>
+      <div class="carousel-page" id="page2">Page 2 content</div>
+      <div class="carousel-page" id="page3">Page 3 content</div>
+    </div>
+  </div>
+
+  <script>
+    // LOVE TEXT BUTTON
+    const loveText = document.getElementById('loveText');
+    const button = document.getElementById('changeButton');
+
+    const messages = [
+      { text: 'I love you more, Simone ❤️', font: 'Arial, sans-serif' },
+      { text: 'Te quiero más, Simone ❤️', font: 'Georgia, serif' },
+      { text: 'Je t\'aime plus, Simone ❤️', font: '"Courier New", monospace' },
+      { text: 'Ich liebe dich mehr, Simone ❤️', font: '"Trebuchet MS", sans-serif' },
+      { text: 'Ti amo di più, Simone ❤️', font: '"Verdana", sans-serif' },
+      { text: 'もっと愛してる, Simone ❤️', font: '"Hiragino Kaku Gothic Pro", sans-serif' },
+      { text: 'Я люблю тебя больше, Simone ❤️', font: '"Times New Roman", serif' }
+    ];
+
+    let current = 0;
+
+    button.addEventListener('click', () => {
+      current = (current + 1) % messages.length;
+      loveText.textContent = messages[current].text;
+      loveText.style.fontFamily = messages[current].font;
+
+      // trigger animation
+      loveText.classList.remove('animate');
+      void loveText.offsetWidth;
+      loveText.classList.add('animate');
+    });
+
+    // CAROUSEL SWIPE
+    const pages = document.querySelectorAll('.carousel-page');
+    let currentIndex = 0;
+    pages[currentIndex].classList.add('active');
+
+    let startX = 0;
+
+    function touchStart(e) {
+      startX = e.touches[0].clientX;
+    }
+
+    function touchEnd(e) {
+      let endX = e.changedTouches[0].clientX;
+      let diff = startX - endX;
+
+      if (Math.abs(diff) > 30) {
+        if (diff > 0) { // swipe left
+          showPage((currentIndex + 1) % pages.length);
+        } else { // swipe right
+          showPage((currentIndex - 1 + pages.length) % pages.length);
+        }
+      }
+    }
+
+    function showPage(index) {
+      pages[currentIndex].classList.remove('active');
+      pages[index].classList.add('active');
+      currentIndex = index;
+    }
+
+    const carousel = document.getElementById('carousel');
+    carousel.addEventListener('touchstart', touchStart);
+    carousel.addEventListener('touchend', touchEnd);
+  </script>
+</body>
+</html>
